@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 Yelp-20250205T224043Z-003.zip
 user-002.parquet
 review-001.json
@@ -10,3 +11,10 @@ CSV.rar
 eda.ipynb
 eda.ipynb
 >>>>>>> c1e631ec83cb8b954987f06f19ca370cb4c9138c
+=======
+data/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+>>>>>>> f114d73f05fd17772b1538784f5bb52dc43c3d01
