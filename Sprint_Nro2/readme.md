@@ -26,9 +26,12 @@ Se utiliza la plataforma Google Cloud, específicamente Cloud Storage, para orga
 #### 📂 Estructura del Data Lake:
 
 ```
+```
 ### Diccionario de Datos
 
 Puedes acceder al diccionario de datos haciendo clic [aquí](https://docs.google.com/document/d/1dPeR2FKj-9TrlyMQnSwaY-1WtDi2RwgOfqhuOPikDkI/edit?usp=sharing).
+
+```
 ---
 
 
