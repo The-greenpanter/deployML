@@ -23,7 +23,7 @@ Este proyecto se centra en el procesamiento y análisis de datos de reseñas de 
 Este proceso ha permitido estructurar los datos de manera que puedan ser utilizados para futuros análisis y visualizaciones. Se pueden realizar estudios adicionales para detectar tendencias y patrones en las reseñas.
 
 
-
+```
 📦 yelp-google-reviews
 │── 📄 README.md                 # Descripción del proyecto, instrucciones y equipo
 │── 📄 requirements.txt          # Librerías necesarias para el proyecto
@@ -66,7 +66,7 @@ Este proceso ha permitido estructurar los datos de manera que puedan ser utiliza
     ├── 📄 methodology.md        # Explicación de la metodología utilizada
     ├── 📄 team.md               # Información sobre los miembros del equipo
 
-
+```
 # <h1 align="center">**`Insight Labs`**</h1>
 
 
