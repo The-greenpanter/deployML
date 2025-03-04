@@ -47,12 +47,7 @@ Se utiliza la plataforma Google Cloud, específicamente Cloud Storage, para orga
  │   ├── processed/
  │   ├── raw/
 ```
-```
-### Diccionario de Datos
 
-Puedes acceder al diccionario de datos haciendo clic [aquí](https://docs.google.com/document/d/1dPeR2FKj-9TrlyMQnSwaY-1WtDi2RwgOfqhuOPikDkI/edit?usp=sharing).
-
-```
 #### 💾 Buckets en Cloud Storage:
 
 - **`datos_crudos`**: Contiene los datos originales sin procesar. Los datos provienen de las fuentes explicadas anteriormente y se mantienen en este bucket antes de aplicarles cualquier transformación.
@@ -127,5 +122,8 @@ El dashboard se realizará en 📊 **Power BI** 📊 y tendrá el siguiente esqu
 Para el modelo de recomendación se utilizará **Machine Learning**, específicamente el algoritmo de **Similitud del Coseno**. Esta técnica mide qué tan similares son dos elementos basándose en sus características. Un coseno cercano a **1** indica alta similitud, mientras que un coseno cercano a **0** indica baja similitud.
 
 ---
+### Diccionario de Datos
+
+Puedes acceder al diccionario de datos haciendo clic [aquí](https://docs.google.com/document/d/1dPeR2FKj-9TrlyMQnSwaY-1WtDi2RwgOfqhuOPikDkI/edit?usp=sharing).
 
 ¡Este proyecto sigue en desarrollo y se actualizará conforme avancemos en el sprint! 🚀
