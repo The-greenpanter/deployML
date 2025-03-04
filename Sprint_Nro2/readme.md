@@ -26,8 +26,6 @@ Se utiliza la plataforma Google Cloud, específicamente Cloud Storage, para orga
 #### 📂 Estructura del Data Lake:
 
 ---
-
-
  dataset-pf-gyelp/
  ├── ETL/
  │   ├── PreETL/
