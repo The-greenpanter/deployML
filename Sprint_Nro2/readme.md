@@ -25,7 +25,7 @@ Se utiliza la plataforma Google Cloud, específicamente Cloud Storage, para orga
 
 #### 📂 Estructura del Data Lake:
 
----
+```
  dataset-pf-gyelp/
  ├── ETL/
  │   ├── PreETL/
@@ -46,7 +46,6 @@ Se utiliza la plataforma Google Cloud, específicamente Cloud Storage, para orga
  │   ├── raw/
 ```
 
-
 #### 💾 Buckets en Cloud Storage:
 
 - **`datos_crudos`**: Contiene los datos originales sin procesar. Los datos provienen de las fuentes explicadas anteriormente y se mantienen en este bucket antes de aplicarles cualquier transformación.
@@ -62,7 +61,6 @@ Se utiliza la plataforma Google Cloud, específicamente Cloud Storage, para orga
 - **`carga_incremental`**: Contiene los archivos nuevos normalizados después de correr las funciones de carga incremental.
 
 ---
-```
 ### ✅ Automatización con Cloud Function
 Para automatizar todo el proceso, se creó una ☁️ **Cloud Function** ☁️ que se ejecuta cuando se suben nuevos archivos al bucket `datos_nuevos`. Esta función:
 
