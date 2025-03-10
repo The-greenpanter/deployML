@@ -3,6 +3,7 @@ from airflow.operators.python import PythonOperator
 from datetime import datetime
 import transform
 import load
+import mapsETL  # 🔹 Importamos Maps
 
 default_args = {
     'owner': 'airflow',
@@ -11,16 +12,22 @@ default_args = {
 }
 
 dag = DAG(
-    'etl_yelp',
+    'etl_yelp_maps',  # 🔹 Cambiamos el nombre para reflejar ambas fuentes
     default_args=default_args,
-    description='Pipeline ETL para Yelp con Airflow',
+    description='Pipeline ETL para Yelp y Google Maps con Airflow',
     schedule_interval='@weekly',
     catchup=False,
 )
 
-transform_task = PythonOperator(
-    task_id='transform_data',
+transform_yelp_task = PythonOperator(
+    task_id='transform_yelp_data',
     python_callable=transform.transform_data,
+    dag=dag,
+)
+
+transform_maps_task = PythonOperator(  # 🔹 Nuevo operador para Maps
+    task_id='transform_maps_data',
+    python_callable=mapsETL.transform_and_load,
     dag=dag,
 )
 
@@ -30,4 +37,5 @@ load_task = PythonOperator(
     dag=dag,
 )
 
-transform_task >> load_task
+# 🔹 Definimos el orden: Yelp y Maps primero, luego la carga final
+[transform_yelp_task, transform_maps_task] >> load_task
