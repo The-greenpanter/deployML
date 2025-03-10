@@ -1,11 +1,11 @@
-"""A liveness prober dag for monitoring composer.googleapis.com/environment/healthy."""
-import airflow
+"""A liveness prober DAG for monitoring composer.googleapis.com/environment/healthy."""
 from airflow import DAG
 from airflow.operators.bash_operator import BashOperator
+from airflow.utils.dates import days_ago
 from datetime import timedelta
 
 default_args = {
-    'start_date': airflow.utils.dates.days_ago(0),
+    'start_date': days_ago(0),
     'retries': 1,
     'retry_delay': timedelta(minutes=5)
 }
@@ -13,8 +13,8 @@ default_args = {
 dag = DAG(
     'airflow_monitoring',
     default_args=default_args,
-    description='liveness monitoring dag',
-    schedule_interval='@daily',
+    description='Liveness monitoring DAG',
+    schedule_interval='@daily',  # Ejecuta una vez al día
     max_active_runs=2,
     catchup=False,
     dagrun_timeout=timedelta(minutes=10),
@@ -27,4 +27,5 @@ t1 = BashOperator(
     dag=dag,
     depends_on_past=False,
     priority_weight=2**31 - 1,
-    do_xcom_push=False)
+    do_xcom_push=False
+)

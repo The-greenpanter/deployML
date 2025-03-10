@@ -8,8 +8,8 @@ from io import StringIO
 BUCKET_NAME = "dataset-pf-gyelp"
 TEMP_BUCKET_MAPS = "dataset-pf-gyelp/Yelp/airFlow/TEMP/MAPS"
 FILES = {
-    "metadata": "Google Maps/review-California/processed/metadata_cleaned.csv",
-    "reviews": "Google Maps/review-California/processed/reviews_gm_cleaned.csv"
+    "metadata": "Google Maps/review-California/processed/Maps/metadata_cleaned.csv",
+    "reviews": "Google Maps/review-California/processed/Maps/reviews_gm_cleaned.csv"
 }
 DATASET_NAME = "proyecto_dw"
 TABLES = {

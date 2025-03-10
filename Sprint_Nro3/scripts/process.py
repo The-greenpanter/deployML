@@ -6,7 +6,7 @@ import hashlib
 
 # Configuración del bucket y rutas
 BUCKET_NAME = "dataset-pf-gyelp"
-PROCESSED_FOLDER = "Yelp/airFlow/processed"
+PROCESSED_FOLDER = "Yelp/airFlow/processed/Yelp"
 TEMP_FOLDER = "Yelp/airFlow/TEMP"
 
 def generate_md5(value):
