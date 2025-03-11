@@ -1,16 +1,9 @@
-import os
 import pandas as pd
+import numpy as np
+import os
 from google.cloud import storage
-from langdetect import detect
 
-# Configuración de GCS
-BUCKET_NAME = "dataset-pf-gyelp"
-RAW_FOLDER = "Yelp/airFlow/raw/"
-PROCESSED_FOLDER = "Yelp/airFlow/processed/"
-
-storage_client = storage.Client()
-
-# Definir mapeo de esquemas
+# Mapeo de columnas
 COLUMN_MAPPING = {
     "google_restaurants.csv": {
         "Business_ID": "business_id",
@@ -34,62 +27,42 @@ COLUMN_MAPPING = {
     }
 }
 
-def clear_bucket_folder(folder):
-    """Elimina todos los archivos en una carpeta del bucket."""
-    bucket = storage_client.bucket(BUCKET_NAME)
-    blobs = list(bucket.list_blobs(prefix=folder))
-    
-    if not blobs:
-        print(f"No hay archivos en {BUCKET_NAME}/{folder} para eliminar.")
-        return
-    
-    for blob in blobs:
-        blob.delete()
-    print(f"Se eliminaron {len(blobs)} archivos en {BUCKET_NAME}/{folder}")
+BUCKET_NAME = "dataset-pf-gyelp"
+PROCESSED_FOLDER = "Yelp/airFlow/processed"
 
-def download_from_bucket(blob_name, local_path):
-    """Descarga un archivo desde Google Cloud Storage."""
-    bucket = storage_client.bucket(BUCKET_NAME)
-    blob = bucket.blob(blob_name)
-    blob.download_to_filename(local_path)
+def transform_data():
+    """Carga archivos de restaurantes, los transforma y los almacena en processed."""
+    client = storage.Client()
+    bucket = client.bucket(BUCKET_NAME)
 
-def upload_to_bucket(local_path, destination_blob_name):
-    """Sube un archivo procesado a Google Cloud Storage."""
-    bucket = storage_client.bucket(BUCKET_NAME)
-    blob = bucket.blob(destination_blob_name)
-    blob.upload_from_filename(local_path)
+    # Cargar los archivos
+    raw_files = ["google_restaurants.csv", "yelp_restaurants.csv"]
+    dataframes = [load_file_from_gcs(bucket, f"Yelp/airFlow/raw/{file}") for file in raw_files]
 
-def process_data():
-    """Procesa los archivos de Yelp y Google, limpiando y transformando los datos."""
-    for filename in COLUMN_MAPPING.keys():
-        raw_blob = f"{RAW_FOLDER}{filename}"
-        local_path = filename
+    # Unir datasets y mapear columnas
+    df = pd.concat(dataframes, ignore_index=True)
+    df.rename(columns={v: k for file_map in COLUMN_MAPPING.values() for k, v in file_map.items()}, inplace=True)
 
-        # Descargar el archivo desde GCS
-        download_from_bucket(raw_blob, local_path)
+    # 🔹 Normalización de ciudades y categorías
+    cities = df[['city']].drop_duplicates().copy()
+    cities['city_id'] = cities['city'].apply(generate_md5)
 
-        # Leer CSV
-        df = pd.read_csv(local_path)
+    categories = df[['category']].drop_duplicates().copy()
+    categories['category_id'] = categories['category'].apply(generate_md5)
 
-        # Limpieza de datos
-        df.dropna(inplace=True)
-        df.drop_duplicates(subset=["Business_ID"], inplace=True)
-        df = df[df["Name"].apply(lambda x: detect(str(x)) in ["en", "es"])]
+    # 🔹 Transformación de negocios
+    df = df.merge(cities, on='city', how='left').drop(columns=['city'])
+    df = df.merge(categories, on='category', how='left').drop(columns=['category'])
 
-        # Transformación de columnas
-        df.rename(columns=COLUMN_MAPPING[filename], inplace=True)
+    # 🔹 Generar dataframes para cada esquema
+    transformed_data = {
+        "dim_business": df[['business_id', 'business_name', 'address', 'city_id', 'category_id', 'latitude', 'longitude', 'review_count']],
+        "dim_city": cities[['city_id', 'city']],
+        "dim_category": categories.rename(columns={'category': 'category'})
+    }
 
-        # Guardar archivo transformado
-        processed_filename = f"processed_{filename}"
-        df.to_csv(processed_filename, index=False)
+    # Guardar archivos en processed
+    for name, df in transformed_data.items():
+        save_dataframe_to_gcs(bucket, df, f"{PROCESSED_FOLDER}/{name}.csv")
 
-        # Subir archivo procesado a GCS
-        processed_blob = f"{PROCESSED_FOLDER}{processed_filename}"
-        upload_to_bucket(processed_filename, processed_blob)
-
-        print(f"Archivo {processed_filename} procesado y subido a {processed_blob}")
-
-if __name__ == "__main__":
-    # Limpiar los buckets antes de procesar los datos
-    clear_bucket_folder(PROCESSED_FOLDER)
-    process_data()
+    print("✅ Transformación completada y guardada en processed.")

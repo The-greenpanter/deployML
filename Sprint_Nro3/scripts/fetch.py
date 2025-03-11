@@ -2,7 +2,6 @@ from google.cloud import storage
 import os
 import requests
 import csv
-from langdetect import detect
 import pandas as pd
 
 gcs_client = storage.Client()
@@ -22,13 +21,6 @@ def clear_bucket_folder(folder):
     for blob in blobs:
         blob.delete()
     print(f"Se eliminaron {len(blobs)} archivos en {BUCKET_NAME}/{folder}")
-
-def upload_to_bucket(filename, folder):
-    """Sube un archivo local al bucket de GCS."""
-    bucket = gcs_client.bucket(BUCKET_NAME)
-    blob = bucket.blob(f"{folder}{filename}")
-    blob.upload_from_filename(filename)
-    print(f"Archivo {filename} subido a {BUCKET_NAME}/{folder}")
 
 def fetch_google_restaurants():
     """Obtiene datos de restaurantes de Google Places API y los guarda en un CSV."""
@@ -59,32 +51,6 @@ def fetch_yelp_restaurants():
     ]
     save_to_csv(restaurants, "yelp_restaurants.csv", RAW_FOLDER)
 
-def save_to_csv(data, filename, folder):
-    """Guarda los datos en un CSV local y lo sube a GCS."""
-    if not data:
-        print(f"No hay datos para guardar en {filename}")
-        return
-    
-    keys = data[0].keys()
-    with open(filename, 'w', newline='', encoding='utf-8') as file:
-        writer = csv.DictWriter(file, fieldnames=keys)
-        writer.writeheader()
-        writer.writerows(data)
-    upload_to_bucket(filename, folder)
-
-def process_data():
-    """Descarga los archivos, limpia y procesa la data, luego los sube a GCS."""
-    for filename in ["google_restaurants.csv", "yelp_restaurants.csv"]:
-        blob = gcs_client.bucket(BUCKET_NAME).blob(f"{RAW_FOLDER}{filename}")
-        blob.download_to_filename(filename)
-        df = pd.read_csv(filename)
-        df.dropna(inplace=True)
-        df.drop_duplicates(subset="Business_ID", inplace=True)
-        df = df[df["Name"].apply(lambda x: detect(str(x)) in ['en', 'es'])]
-        processed_filename = f"processed_{filename}"
-        df.to_csv(processed_filename, index=False)
-        upload_to_bucket(processed_filename, PROCESSED_FOLDER)
-
 if __name__ == "__main__":
     # Limpiar los buckets antes de iniciar
     clear_bucket_folder(RAW_FOLDER)
@@ -93,4 +59,4 @@ if __name__ == "__main__":
     # Ejecutar las funciones de recolección y procesamiento
     fetch_google_restaurants()
     fetch_yelp_restaurants()
-    process_data()
+
