@@ -1,40 +1,51 @@
 from airflow import DAG
 from airflow.operators.python import PythonOperator
-from airflow.utils.dates import days_ago
+from datetime import datetime, timedelta
+from scripts.fetch import fetch_and_upload
 from scripts.process import transform_data
 from scripts.load import load_to_datawarehouse
-from scripts.mapsETL import transform_and_load
 
+# Definir los argumentos del DAG
 default_args = {
     "owner": "airflow",
-    "start_date": days_ago(1),
+    "start_date": datetime(2024, 7, 10),
     "retries": 5,
+    "retry_delay": timedelta(minutes=5),
+    "depends_on_past": False,
 }
 
-dag = DAG(
-    'etl_yelp_maps',
-    default_args=default_args,
-    description='Pipeline ETL para Yelp y Google Maps con Airflow',
-    schedule_interval='@weekly',
-    catchup=True,
+# Definir tareas
+fetch_task = PythonOperator(
+    task_id="fetch_data",
+    python_callable=fetch_and_upload,
+    dag=None,  # Se asignará después
 )
 
-transform_yelp_task = PythonOperator(
-    task_id='transform_yelp_data',
+transform_task = PythonOperator(
+    task_id="transform_data",
     python_callable=transform_data,
-    dag=dag,
-)
-
-transform_maps_task = PythonOperator(
-    task_id='transform_maps_data',
-    python_callable=transform_and_load,
-    dag=dag,
+    dag=None,
 )
 
 load_task = PythonOperator(
-    task_id='load_to_datawarehouse',
+    task_id="load_to_datawarehouse",
     python_callable=load_to_datawarehouse,
-    dag=dag,
+    dag=None,
 )
 
-[transform_yelp_task, transform_maps_task] >> load_task
+# Definir DAG después de las tareas
+dag = DAG(
+    "etl_yelp_maps",
+    default_args=default_args,
+    description="Pipeline ETL para Yelp y Google Maps con Airflow",
+    schedule_interval="@weekly",
+    catchup=False,  # Evita ejecuciones históricas
+)
+
+# Asignar el DAG a las tareas
+fetch_task.dag = dag
+transform_task.dag = dag
+load_task.dag = dag
+
+# Definir dependencias
+fetch_task >> transform_task >> load_task

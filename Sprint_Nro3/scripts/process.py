@@ -1,89 +1,95 @@
+import os
 import pandas as pd
-import numpy as np
 from google.cloud import storage
-from io import StringIO
-import hashlib
+from langdetect import detect
 
-# Configuración del bucket y rutas
+# Configuración de GCS
 BUCKET_NAME = "dataset-pf-gyelp"
-PROCESSED_FOLDER = "Yelp/airFlow/processed/Yelp"
-TEMP_FOLDER = "Yelp/airFlow/TEMP"
+RAW_FOLDER = "Yelp/airFlow/raw/"
+PROCESSED_FOLDER = "Yelp/airFlow/processed/"
 
-def generate_md5(value):
-    """Genera un hash MD5 para valores únicos."""
-    return hashlib.md5(value.encode()).hexdigest()
+storage_client = storage.Client()
 
-def load_file_from_gcs(bucket, file_path):
-    """Carga un archivo CSV desde GCS y lo convierte en un DataFrame de Pandas."""
-    blob = bucket.blob(file_path)
-    content = blob.download_as_text()
-    return pd.read_csv(StringIO(content), encoding='utf-8')
-
-def save_dataframe_to_gcs(bucket, df, file_name):
-    """Guarda un DataFrame como CSV en TEMP dentro de GCS."""
-    blob = bucket.blob(f"{TEMP_FOLDER}/YELP/{file_name}")
-    content = df.to_csv(index=False)
-    blob.upload_from_string(content, content_type="text/csv")
-    print(f"✅ Guardado en TEMP: {file_name}")
-
-def transform_data():
-    """Carga archivos procesados, los transforma y los almacena en TEMP."""
-    client = storage.Client()
-    bucket = client.bucket(BUCKET_NAME)
-
-    # Archivos de entrada desde processed
-    files = {
-        "users_cleaned": f"{PROCESSED_FOLDER}/users_cleaned.csv",
-        "reviews_cleaned": f"{PROCESSED_FOLDER}/reviews_cleaned.csv",
-        "business_cleaned": f"{PROCESSED_FOLDER}/business_cleaned.csv",
-        "tips_cleaned": f"{PROCESSED_FOLDER}/tips_cleaned.csv",
-        "review_cleaned": f"{PROCESSED_FOLDER}/review_cleaned.csv"
+# Definir mapeo de esquemas
+COLUMN_MAPPING = {
+    "google_restaurants.csv": {
+        "Business_ID": "business_id",
+        "Name": "business_name",
+        "Address": "address",
+        "City": "city",
+        "Category": "category",
+        "Latitude": "latitude",
+        "Longitude": "longitude",
+        "Review_Count": "review_count"
+    },
+    "yelp_restaurants.csv": {
+        "Business_ID": "business_id",
+        "Name": "business_name",
+        "Address": "address",
+        "City": "city",
+        "Category": "category",
+        "Latitude": "latitude",
+        "Longitude": "longitude",
+        "Review_Count": "review_count"
     }
+}
 
-    # Cargar los archivos
-    dataframes = {key: load_file_from_gcs(bucket, path) for key, path in files.items()}
-
-    # 🔹 Tratamiento de valores nulos
-    for name, df in dataframes.items():
-        numeric_df = df.select_dtypes(include=[np.number])
-        for col in numeric_df.columns:
-            mean = df[col].mean()
-            df[col].fillna(mean, inplace=True)
-    print("✅ Valores nulos tratados correctamente.")
+def clear_bucket_folder(folder):
+    """Elimina todos los archivos en una carpeta del bucket."""
+    bucket = storage_client.bucket(BUCKET_NAME)
+    blobs = list(bucket.list_blobs(prefix=folder))
     
-    # 🔹 Transformaciones
-    users_cleaned = dataframes['users_cleaned'][['user_id', 'name', 'review_count', 'yelping_since']].copy()
-    users_cleaned['yelping_since'] = pd.to_datetime(users_cleaned['yelping_since']).dt.date
+    if not blobs:
+        print(f"No hay archivos en {BUCKET_NAME}/{folder} para eliminar.")
+        return
+    
+    for blob in blobs:
+        blob.delete()
+    print(f"Se eliminaron {len(blobs)} archivos en {BUCKET_NAME}/{folder}")
 
-    reviews_cleaned = dataframes['reviews_cleaned'][['review_id', 'business_id', 'user_id', 'stars', 'text', 'date']].copy()
-    reviews_cleaned.rename(columns={'date': 'review_date'}, inplace=True)
-    reviews_cleaned['review_date'] = pd.to_datetime(reviews_cleaned['review_date']).dt.date
-    reviews_cleaned['stars'] = reviews_cleaned['stars'].astype(int)
+def download_from_bucket(blob_name, local_path):
+    """Descarga un archivo desde Google Cloud Storage."""
+    bucket = storage_client.bucket(BUCKET_NAME)
+    blob = bucket.blob(blob_name)
+    blob.download_to_filename(local_path)
 
-    business_cleaned = dataframes['business_cleaned'][['business_id', 'name', 'address', 'city', 'categories', 'latitude', 'longitude', 'review_count']].copy()
-    business_cleaned.rename(columns={'name': 'business_name'}, inplace=True)
+def upload_to_bucket(local_path, destination_blob_name):
+    """Sube un archivo procesado a Google Cloud Storage."""
+    bucket = storage_client.bucket(BUCKET_NAME)
+    blob = bucket.blob(destination_blob_name)
+    blob.upload_from_filename(local_path)
 
-    # 🔹 Normalización de ciudades y categorías
-    cities = business_cleaned[['city']].drop_duplicates().copy()
-    cities['city_id'] = cities['city'].apply(generate_md5)
+def process_data():
+    """Procesa los archivos de Yelp y Google, limpiando y transformando los datos."""
+    for filename in COLUMN_MAPPING.keys():
+        raw_blob = f"{RAW_FOLDER}{filename}"
+        local_path = filename
 
-    categories = business_cleaned[['categories']].drop_duplicates().copy()
-    categories['category_id'] = categories['categories'].apply(generate_md5)
+        # Descargar el archivo desde GCS
+        download_from_bucket(raw_blob, local_path)
 
-    business_cleaned = business_cleaned.merge(cities, on='city', how='left').drop(columns=['city'])
-    business_cleaned = business_cleaned.merge(categories, on='categories', how='left').drop(columns=['categories'])
+        # Leer CSV
+        df = pd.read_csv(local_path)
 
-    # Diccionario con los datos transformados
-    transformed_data = {
-        "dim_user": users_cleaned,
-        "fact_reviews": reviews_cleaned,
-        "dim_business": business_cleaned,
-        "dim_city": cities[['city_id', 'city']],
-        "dim_category": categories.rename(columns={'categories': 'category'})
-    }
+        # Limpieza de datos
+        df.dropna(inplace=True)
+        df.drop_duplicates(subset=["Business_ID"], inplace=True)
+        df = df[df["Name"].apply(lambda x: detect(str(x)) in ["en", "es"])]
 
-    # Guardar archivos en TEMP
-    for name, df in transformed_data.items():
-        save_dataframe_to_gcs(bucket, df, f"{name}.csv")
+        # Transformación de columnas
+        df.rename(columns=COLUMN_MAPPING[filename], inplace=True)
 
-    print("✅ Transformación completada y guardada en TEMP.")
+        # Guardar archivo transformado
+        processed_filename = f"processed_{filename}"
+        df.to_csv(processed_filename, index=False)
+
+        # Subir archivo procesado a GCS
+        processed_blob = f"{PROCESSED_FOLDER}{processed_filename}"
+        upload_to_bucket(processed_filename, processed_blob)
+
+        print(f"Archivo {processed_filename} procesado y subido a {processed_blob}")
+
+if __name__ == "__main__":
+    # Limpiar los buckets antes de procesar los datos
+    clear_bucket_folder(PROCESSED_FOLDER)
+    process_data()
