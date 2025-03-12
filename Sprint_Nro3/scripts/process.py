@@ -30,6 +30,12 @@ COLUMN_MAPPING = {
 BUCKET_NAME = "dataset-pf-gyelp"
 PROCESSED_FOLDER = "Yelp/airFlow/processed"
 
+def load_file_from_gcs(bucket, file_path):
+    """Carga un archivo CSV desde Google Cloud Storage en un DataFrame de Pandas."""
+    blob = bucket.blob(file_path)
+    content = blob.download_as_text()
+    return pd.read_csv(pd.compat.StringIO(content))
+
 def transform_data():
     """Carga archivos de restaurantes, los transforma y los almacena en processed."""
     client = storage.Client()

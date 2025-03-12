@@ -9,6 +9,22 @@ BUCKET_NAME = "dataset-pf-gyelp"
 RAW_FOLDER = "Yelp/airFlow/raw/"
 PROCESSED_FOLDER = "Yelp/airFlow/processed/"
 
+def save_to_csv(data, filename, folder):
+    """Guarda los datos en un archivo CSV y lo sube a Google Cloud Storage."""
+    local_path = f"/tmp/{filename}"  # Carpeta temporal en Airflow
+    gcs_path = f"{folder}{filename}"  # Ruta en Google Cloud Storage
+
+    # Guardar en CSV localmente
+    df = pd.DataFrame(data)
+    df.to_csv(local_path, index=False)
+
+    # Subir a GCS
+    bucket = gcs_client.bucket(BUCKET_NAME)
+    blob = bucket.blob(gcs_path)
+    blob.upload_from_filename(local_path)
+
+    print(f"Archivo guardado en GCS: {BUCKET_NAME}/{gcs_path}")
+
 def clear_bucket_folder(folder):
     """Elimina todos los archivos en una carpeta del bucket."""
     bucket = gcs_client.bucket(BUCKET_NAME)
