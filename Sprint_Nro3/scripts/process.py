@@ -1,7 +1,9 @@
 import pandas as pd
 import numpy as np
-import os
+import io
 from google.cloud import storage
+import hashlib
+
 
 # Mapeo de columnas
 COLUMN_MAPPING = {
@@ -30,11 +32,23 @@ COLUMN_MAPPING = {
 BUCKET_NAME = "dataset-pf-gyelp"
 PROCESSED_FOLDER = "Yelp/airFlow/processed"
 
+def generate_md5(value):
+    """Genera un hash MD5 para un string."""
+    return hashlib.md5(value.encode()).hexdigest()
+
+
 def load_file_from_gcs(bucket, file_path):
     """Carga un archivo CSV desde Google Cloud Storage en un DataFrame de Pandas."""
     blob = bucket.blob(file_path)
     content = blob.download_as_text()
-    return pd.read_csv(pd.compat.StringIO(content))
+    return pd.read_csv(io.StringIO(content))
+
+def save_dataframe_to_gcs(bucket, df, destination_path):
+    """Guarda un DataFrame como CSV en Google Cloud Storage."""
+    blob = bucket.blob(destination_path)
+    blob.upload_from_string(df.to_csv(index=False), content_type="text/csv")
+
+
 
 def transform_data():
     """Carga archivos de restaurantes, los transforma y los almacena en processed."""
@@ -72,3 +86,4 @@ def transform_data():
         save_dataframe_to_gcs(bucket, df, f"{PROCESSED_FOLDER}/{name}.csv")
 
     print("✅ Transformación completada y guardada en processed.")
+
