@@ -10,7 +10,7 @@ from scripts.fetch import (
 from scripts.process import (transform_data, load_file_from_gcs)
 from scripts.load import load_to_bigquery
 
-# ConfiguraciÃ³n del DAG
+# ConfiguraciÃƒÂ³n del DAG
 default_args = {
     "owner": "airflow",
     "start_date": datetime(2024, 7, 10),
@@ -21,7 +21,7 @@ dag = DAG(
     "etl_yelp_maps",
     default_args=default_args,
     description="Pipeline ETL para Yelp y Google Maps con Airflow",
-    schedule_interval="0.5 * * * * ",
+    schedule_interval="*/1 * * * * ",
     catchup=False,
 )
 
@@ -77,5 +77,5 @@ load_task = PythonOperator(
     dag=dag,
 )
 
-# Definir flujo de ejecuciÃ³n
+# Definir flujo de ejecuciÃƒÂ³n
 pubsub_sensor_task >> clear_raw_task >> [fetch_google_task, fetch_yelp_task] >> clear_processed_task >> process_task >> load_task
