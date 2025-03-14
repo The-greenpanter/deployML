@@ -1,0 +1,12 @@
+streamlit
+spacy
+pandas
+matplotlib
+seaborn
+wordcloud
+scikit-learn
+datasets
+requests
+torch
+tqdm
+gunicorn

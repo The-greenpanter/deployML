@@ -1,51 +1,36 @@
-# README: Configuración y Uso de DAGs en Apache Airflow
+# <h1 align="center">**`YELP & GOOGLE MAPS - REVIEWS AND RECOMMENDATIONS 🍽️`**</h1> 
 
-## Descripción del Proyecto
-Este proyecto implementa DAGs en Apache Airflow para la extracción, transformación y carga (ETL) de datos en un entorno de BigQuery. Se han definido diferentes tareas dentro de los DAGs para garantizar una ingesta de datos eficiente y estructurada.
+Este proyecto tiene como objetivo crear un sistema de recomendación de restaurantes basado en las reseñas de los usuarios, utilizando técnicas de Machine Learning y visualización de datos.
 
-## Estructura de los DAGs
-### 1. Extracción de Datos
-- Se obtienen datos desde diversas fuentes como archivos CSV, bases de datos externas o APIs.
-- Los datos extraídos se almacenan temporalmente en un bucket de almacenamiento en la nube o una base de datos intermedia.
+##  `Etapa de Analytics y Machine Learning`  🧠📊
 
-### 2. Transformación de Datos
-- Se normalizan y limpian los datos.
-- Se estructuran en diferentes tablas dimensionadas como `dim_user`, `dim_business`, `dim_city` y `dim_category`.
-- Se genera una tabla de hechos `fact_reviews` con la información combinada.
+## 📊 `Análisis de Datos y KPIs`:
+- 🚀 **Power BI** se utilizó para generar Dashboards que presenten el análisis de datos, métricas clave y KPIs.
 
-### 3. Carga en BigQuery
-- Los datos procesados se suben a Google BigQuery en su estructura final.
-- Se validan los esquemas de las tablas para evitar inconsistencias.
+### 🔍 `Descripción de los Componentes`:
 
-## Archivos Principales
-- `dags/etl_pipeline.py`: Contiene la definición principal del DAG de ETL.
-- `dags/utils.py`: Contiene funciones auxiliares como `generate_md5()` para la generación de claves.
-- `dags/config.py`: Configuración de credenciales y rutas de almacenamiento.
+1. **Filtrado de Negocios por Estado y Categoría**:
+   - Utilizamos un filtro para seleccionar negocios según el estado y la categoría de interés del usuario, basándonos en los límites de latitud y longitud de los estados: California, Florida, Illinois y Nueva York.
+   - Esto permite que el sistema se centre en los negocios relevantes para el usuario y el área geográfica seleccionada.
 
-## Dependencias
-Para ejecutar los DAGs, asegúrese de tener instaladas las siguientes dependencias en su entorno de Airflow:
+2. **Análisis de Sentimientos**:
+   - A través de **VADER Sentiment Analysis**, calculamos una puntuación de sentimiento para cada reseña textual. Esta puntuación indica si las reseñas son predominantemente positivas, negativas o neutrales.
+   - Los negocios se clasifican en "mejores" (con un sentimiento positivo) y "peores" (con un sentimiento negativo).
 
-```bash
-pip install apache-airflow[gcp]
-pip install pandas google-cloud-bigquery
-```
+3. **Mapas Interactivos**:
+   - Los mejores y peores negocios, basados en el análisis de sentimientos, se muestran en un mapa interactivo utilizando **folium**. Los negocios más recomendados se marcan en verde, mientras que los negocios menos recomendados se marcan en rojo.
+   - También se proponen nuevas ubicaciones para abrir negocios, marcadas en azul, basándose en la ubicación de los negocios menos exitosos.
 
-## Configuración en Airflow
-1. Copiar los archivos a la carpeta `dags/` de Airflow.
-2. Configurar las credenciales de GCP en `config.py` o en las variables de entorno de Airflow.
-3. Activar los DAGs desde la UI de Airflow y monitorear su ejecución.
+4. **Vectorización de Características de Reseñas**:
+   - Utilizamos **TfidfVectorizer** para extraer las características más relevantes de las reseñas positivas de los mejores negocios. Estas características pueden ser utilizadas para definir la propuesta de valor de un nuevo negocio en el área.
+   - El vectorizador selecciona las 10 palabras más relevantes de los tips asociados a los mejores negocios, lo que proporciona una idea de las características clave que los clientes valoran.
 
-## Solución de Problemas
-### 1. **Error: `category_id` no encontrado en `fact_reviews`**
-   - Solución: Se modificó la transformación de datos para agregar `category_id` mediante un `merge` con `business_cleaned`.
+### 🚀 Despliegue del Sistema de Recomendación:
+- 🌐 **Despliegue del Sistema**: El sistema de recomendación de restaurantes fue desplegado a través de **Streamlit**, proporcionando una interfaz interactiva y accesible para los usuarios finales.
 
-### 2. **Error de conexión con BigQuery**
-   - Verificar que las credenciales de GCP estén correctamente configuradas.
-   - Confirmar que la cuenta de servicio tenga permisos de escritura en BigQuery.
-
-## Contribuciones
-Cualquier mejora o corrección puede ser enviada mediante pull requests en el repositorio correspondiente.
-
----
-Este documento servirá como guía para la configuración y mantenimiento del flujo de datos en Apache Airflow.
+## `Herramientas Utilizadas` 🛠️
+- **Power BI**: Para visualización de datos y análisis de KPIs.
+- **Python**: Para el procesamiento de datos y construcción de los modelos de Machine Learning.
+- **Streamlit**: Para la implementación y despliegue del sistema de recomendación.
+- **Scikit-Learn**: Para implementar el modelo KNN con similitud del coseno.
 
