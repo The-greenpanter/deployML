@@ -14,7 +14,7 @@ from scripts.load import load_to_bigquery
 default_args = {
     "owner": "airflow",
     "start_date": datetime(2024, 7, 10),
-    "retries": 5,
+    "retries": 3,
 }
 
 dag = DAG(
@@ -22,7 +22,7 @@ dag = DAG(
     default_args=default_args,
     description="Pipeline ETL para Yelp y Google Maps con Airflow",
     schedule_interval="@weekly",
-    catchup=False,
+    catchup=True,
 )
 
 #  Esperar mensaje en Pub/Sub
@@ -30,7 +30,7 @@ pubsub_sensor_task = PubSubPullSensor(
     task_id="pubsub_sensor",
     project_id="proyectofinalgogleyelp",
     subscription="cloudFunction",
-    timeout=60,  
+    timeout=60,
     poke_interval=10,
     mode="poke",  # Modo recomendado
     dag=dag,
@@ -56,11 +56,6 @@ fetch_yelp_task = PythonOperator(
     dag=dag,
 )
 
-clear_processed_task = PythonOperator(
-    task_id="clear_processed_folder",
-    python_callable=lambda: clear_bucket_folder("Yelp/airFlow/processed/"),
-    dag=dag,
-)
 
 # Procesar datos
 process_task = PythonOperator(
@@ -69,6 +64,11 @@ process_task = PythonOperator(
     dag=dag,
 )
 
+clear_processed_task = PythonOperator(
+    task_id="clear_processed_folder",
+    python_callable=lambda: clear_bucket_folder("Yelp/airFlow/processed/"),
+    dag=dag,
+)
 # Cargar datos en BigQuery
 load_task = PythonOperator(
     task_id="load_to_bigquery",

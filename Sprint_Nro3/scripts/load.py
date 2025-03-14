@@ -19,8 +19,6 @@ bq_client = bigquery.Client()
 
 def load_to_bigquery():
     """Carga los archivos procesados desde GCS a BigQuery."""
-    check_dataset()  # Verificar si el dataset existe
-
     bucket = storage_client.bucket(BUCKET_NAME)
     blobs = list(bucket.list_blobs(prefix=PROCESSED_FOLDER))
 

@@ -1,0 +1,102 @@
+[
+  {
+    "Business_ID": "2g3Af4y33ZMBLJzulZvbzQ",
+    "Name": "Mountain Oaks Cafe",
+    "Address": "40282 CA-41, Unit 9, Oakhurst, CA 93644",
+    "City": "Oakhurst",
+    "Category": "American, Breakfast & Brunch, Burgers",
+    "Latitude": 37.3332671629224,
+    "Longitude": -119.6508896,
+    "Review_Count": 185
+  },
+  {
+    "Business_ID": "O7jIKYL3p_MNl6alOMeL3Q",
+    "Name": "North Fork BBQ",
+    "Address": "32754 Rd 222, North Fork, CA 93643",
+    "City": "North Fork",
+    "Category": "Barbeque, Sandwiches, Breakfast & Brunch",
+    "Latitude": 37.2228645809218,
+    "Longitude": -119.51036793036953,
+    "Review_Count": 152
+  },
+  {
+    "Business_ID": "8rmEBlB0_qBSy0P3u-kWjw",
+    "Name": "Wild Fig Kitchen",
+    "Address": "35300 Hwy 41, Ste 110, Coarsegold, CA 93614",
+    "City": "Coarsegold",
+    "Category": "Breakfast & Brunch, Burgers, Sandwiches",
+    "Latitude": 37.2622980132899,
+    "Longitude": -119.700374975394,
+    "Review_Count": 465
+  },
+  {
+    "Business_ID": "HUL6rCJwpFOiSdk4p4wn0w",
+    "Name": "Tollhouse Market And Grill",
+    "Address": "28524 Tollhouse Rd, Tollhouse, CA 93667",
+    "City": "Tollhouse",
+    "Category": "Burgers, Convenience Stores, Italian",
+    "Latitude": 37.01699,
+    "Longitude": -119.4002011,
+    "Review_Count": 83
+  },
+  {
+    "Business_ID": "l_D9msy8yEAb00dPZiqfIA",
+    "Name": "June Bug Cafe",
+    "Address": "6979A Hwy 140, Midpines, CA 95345",
+    "City": "Midpines",
+    "Category": "New American, Breakfast & Brunch, Seafood",
+    "Latitude": 37.5744737298908,
+    "Longitude": -119.951261111075,
+    "Review_Count": 160
+  },
+  {
+    "Business_ID": "vuvJr6juxDm4ErDVx8m2CA",
+    "Name": "Hot Shot Coffee Shack",
+    "Address": "33013 Rd 222, North Fork, CA 93643",
+    "City": "North Fork",
+    "Category": "Cafes, Breakfast & Brunch",
+    "Latitude": 37.22720321100668,
+    "Longitude": -119.509352,
+    "Review_Count": 34
+  },
+  {
+    "Business_ID": "OgGdSKBLsj6RWwLGyBY9Gg",
+    "Name": "Heart & Soul Country Kitchen",
+    "Address": "2182 Hwy 4, Arnold, CA 95223",
+    "City": "Arnold",
+    "Category": "Breakfast & Brunch, Comfort Food, Soul Food",
+    "Latitude": 38.23975435806423,
+    "Longitude": -120.36383060971517,
+    "Review_Count": 128
+  },
+  {
+    "Business_ID": "avuM9ktjTXCd-onmv3yv7w",
+    "Name": "Sequoia Coffee Co.",
+    "Address": "41669 Sierra Dr, Three Rivers, CA 93271",
+    "City": "Three Rivers",
+    "Category": "Coffee & Tea, Breakfast & Brunch",
+    "Latitude": 36.4385668999778,
+    "Longitude": -118.905282095075,
+    "Review_Count": 307
+  },
+  {
+    "Business_ID": "8owjHPc998a2CmRCLcxL-A",
+    "Name": "Priest Station Cafe",
+    "Address": "16756 Old Priest Grade, Big Oak Flat, CA 95305",
+    "City": "Big Oak Flat",
+    "Category": "American, Breakfast & Brunch",
+    "Latitude": 37.8138426,
+    "Longitude": -120.272588,
+    "Review_Count": 430
+  },
+  {
+    "Business_ID": "O7A7Z752I1YVA-f4rmofHA",
+    "Name": "The Coulter Cafe",
+    "Address": "5015 Main St, Coulterville, CA 95311",
+    "City": "Coulterville",
+    "Category": "Breakfast & Brunch, Salad, New American",
+    "Latitude": 37.71154523327717,
+    "Longitude": -120.19644038671352,
+    "Review_Count": 62
+  }
+]
