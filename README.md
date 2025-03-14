@@ -213,6 +213,6 @@ Porque en el mundo de las inversiones, el conocimiento es la clave del éxito.
     <td align="center"><a href="https://www.linkedin.com"><img src="Imagenes/lkd.png" alt="LinkedIn" width="40"/></a></td>
     <td align="center"><a href="https://www.linkedin.com"><img src="Imagenes/lkd.png" alt="LinkedIn" width="40"/></a></td>
     <td align="center"><a href="https://www.linkedin.com/"><img src="Imagenes/lkd.png" alt="LinkedIn" width="40"/></a></td>
-    <td align="center"><a href="https://www.linkedin.com/"><img src="Imagenes/lkd.png" alt="LinkedIn" width="40"/></a></td>
+    <td align="center"><a href="https://www.linkedin.com/in/efrainlinares"><img src="Imagenes/lkd.png" alt="LinkedIn" width="40"/></a></td>
   </tr>
 
