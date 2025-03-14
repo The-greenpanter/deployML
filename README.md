@@ -172,10 +172,11 @@ El sistema de recomendación junto al dashboard se han implementado en **Streaml
 
 ## :white_check_mark: ```Dashboard ```
 El Dashboard completo en formato pdf se encuentra en la carpeta 
-PROXIMAMENTE
+
 
 ![d1](Imagenes/Dashboard.png)
 
+(https://drive.google.com/file/d/1ye4wslSjsLNIsXDsjrbfbSm8xvbOBjnW/view?usp=drive_link)
 ## :white_check_mark: ```Resultados y Conclusiones```
 
 Insights Labs está transformando el análisis de datos en estrategias ganadoras. Nuestro sistema de recomendación será la herramienta clave para inversionistas que buscan maximizar sus oportunidades en el mercado turístico y gastronómico. Con datos precisos y análisis avanzado, estamos redefiniendo la forma en que las empresas toman decisiones inteligentes.
