@@ -145,23 +145,21 @@ Nuestro objetivo es proporcionar insights valiosos mediante el cruce de reseñas
 ## 🏆 Indicadores Claves de Rendimiento (KPIs)
 
 
-KPI :one: : **Índice de Satisfacción del Cliente (ISC)**
-
-Evaluar la satisfacción general de los clientes en comparación con el año anterior. Un ISC más alto indica una mayor satisfacción, lo que puede ser un factor atractivo para los inversionistas.
-
-
-
-KPI :two: : **Índice de Malas Experiencias (IME)**
-
-Evaluar anualmente la calidad del servicio en distintas ubicaciones, proporcionando información detallada sobre el desempeño en diferentes áreas geográficas.
+KPI :one: : **Aumento del 10% en la Cantidad de Clientes**
+Definición: Este KPI mide el crecimiento anual en la cantidad de clientes, lo cual refleja la efectividad de las estrategias de marketing y la capacidad del negocio para atraer y retener nuevos clientes. Un aumento del 10% en la cantidad de clientes indica un crecimiento significativo en la base de clientes y mayores oportunidades de ingresos.
+Objetivo: +10%
 
 
-KPI :three: : **Índice de Reputación Online (IRO)**
 
-Medir la reputación digital del negocio año tras año. Un alto IRO refleja una buena percepción del negocio, lo que lo hace más atractivo para los inversionistas.
+KPI :two: : **Tasa de Crecimiento de Nuevas Reseñas (TCNR)**
+Calcula la tasa de aumento en la cantidad de reseñas (de cualquier tipo) en un periodo de tiempo.
+TCNR = (Cantidad de reseñas periodo actual-Cantidad de reseñas periodo anterior*100)/Cantidad de reseñas periodo actual
 
-KPI :four: : **Medición de Check-ins (CM)**
-Incrementar anualmente el número de check-ins en un 10%.
+
+
+KPI :three: : **Tasa  Crecimiento del 10% en la cantidad de locales**
+Definición: Crecimiento anual de la cantidad de sucursales. Esto proporciona una métrica clara y cuantificable que refleja la expansión y vitalidad del negocio.
+Objetivo: +10%
 
 
 ## ​Stack Tecnológico y Pipeline
