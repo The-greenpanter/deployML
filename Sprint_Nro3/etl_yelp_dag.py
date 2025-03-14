@@ -21,20 +21,21 @@ dag = DAG(
     "etl_yelp_maps",
     default_args=default_args,
     description="Pipeline ETL para Yelp y Google Maps con Airflow",
-    schedule_interval="@weekly",
-    catchup=True,
+    schedule_interval="*/10 * * * * ",
+    catchup=False,
 )
 
-#  Esperar mensaje en Pub/Sub
+# Sensor Pub/Sub (espera mensaje del Google Cloud Scheduler)
 pubsub_sensor_task = PubSubPullSensor(
     task_id="pubsub_sensor",
     project_id="proyectofinalgogleyelp",
-    subscription="cloudFunction",
-    timeout=60,
-    poke_interval=10,
-    mode="poke",  # Modo recomendado
+    subscription="etl_yelp_maps",
+    timeout=300,  # Espera hasta 5 min
+    poke_interval=10,  # Revisa cada 30s
+    mode="poke",  
     dag=dag,
 )
+
 
 # Limpiar carpetas antes de procesar
 clear_raw_task = PythonOperator(

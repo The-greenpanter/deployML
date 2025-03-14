@@ -1,6 +1,24 @@
 import pandas as pd
 from google.cloud import bigquery, storage
 
+SCHEMAS = {
+    "dim_business": [
+        bigquery.SchemaField("business_id", "STRING"),
+        bigquery.SchemaField("name", "STRING"),
+        bigquery.SchemaField("latitude", "FLOAT"),
+        bigquery.SchemaField("longitude", "FLOAT"),
+        bigquery.SchemaField("review_count", "INTEGER"),
+    ],
+    "dim_city": [
+        bigquery.SchemaField("city_id", "STRING"),
+        bigquery.SchemaField("city", "STRING"),
+    ],
+    "dim_category": [
+        bigquery.SchemaField("category_id", "STRING"),
+        bigquery.SchemaField("category", "STRING"),
+    ],
+}
+
 # Configuración
 BUCKET_NAME = "dataset-pf-gyelp"
 PROCESSED_FOLDER = "Yelp/airFlow/processed"
@@ -45,18 +63,15 @@ def load_to_bigquery():
             df["longitude"] = pd.to_numeric(df["longitude"], errors="coerce")
             df["review_count"] = df["review_count"].astype("Int64")
 
-        if table_name == "dim_city":
+        elif table_name == "dim_city":
             df["city_id"] = df["city_id"].astype(str)
             df["city"] = df["city"].astype(str)
 
-        if table_name == "dim_category":
+        elif table_name == "dim_category":
             df["category_id"] = df["category_id"].astype(str)
             df["category"] = df["category"].astype(str)
 
         try:
-            # Limpiar datos previos en la tabla antes de cargar nuevos
-            clean_existing_data(table_name)
-
             # Cargar datos a BigQuery
             table_ref = bq_client.dataset(DATASET_ID).table(table_name)
             job = bq_client.load_table_from_dataframe(
@@ -72,6 +87,7 @@ def load_to_bigquery():
 
         except Exception as e:
             print(f"❌ Error al cargar {filename} en {table_name}: {e}")
+
 
 if __name__ == "__main__":
     load_to_bigquery()
