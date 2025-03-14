@@ -174,7 +174,7 @@ El sistema de recomendación junto al dashboard se han implementado en **Streaml
 El Dashboard completo en formato pdf se encuentra en la carpeta 
 PROXIMAMENTE
 
-![d1](Imagenes/in.jpeg)
+![d1](Imagenes/dashboard.png)
 
 ## :white_check_mark: ```Resultados y Conclusiones```
 
