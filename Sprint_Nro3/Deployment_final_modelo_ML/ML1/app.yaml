@@ -1,5 +1,5 @@
 runtime: python39  # Ajusta a la versión de Python que usas
-entrypoint: gunicorn -b :$PORT main:app  # Asegúrate de que el archivo `main.py` tenga `app` como la instancia de Flask
+entrypoint: gunicorn -b :$PORT ML1:app  # Asegúrate de que el archivo `main.py` tenga `app` como la instancia de Flask
 
 handlers:
 - url: /.*
