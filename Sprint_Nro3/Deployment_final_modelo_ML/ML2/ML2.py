@@ -7,7 +7,7 @@ import os
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 # Construir la ruta al CSV dentro del proyecto
-ruta_csv = os.path.join(BASE_DIR, "data_example", "sample_reviews_ML2.csv")
+ruta_csv = os.path.join(BASE_DIR, "data_example", "top10_ciudad_ML2.csv")
 
 # Cargar el CSV con pandas
 df = pd.read_csv(ruta_csv, encoding="utf-8", delimiter=",", quotechar='"', header=None, names=["rating", "text"])
