@@ -21,7 +21,7 @@ dag = DAG(
     "etl_yelp_maps",
     default_args=default_args,
     description="Pipeline ETL para Yelp y Google Maps con Airflow",
-    schedule_interval="*/1 * * * * ",
+    schedule_interval="*/3 * * * * ",
     catchup=False,
 )
 

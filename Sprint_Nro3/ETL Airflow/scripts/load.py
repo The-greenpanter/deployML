@@ -22,7 +22,7 @@ SCHEMAS = {
 # ConfiguraciÃ³n
 BUCKET_NAME = "dataset-pf-gyelp"
 PROCESSED_FOLDER = "Yelp/airFlow/processed"
-DATASET_ID = "your_dataset_id"
+DATASET_ID = "proyecto_dw"
 
 # Mapeo de archivos a tablas
 FILE_TABLE_MAPPING = {
