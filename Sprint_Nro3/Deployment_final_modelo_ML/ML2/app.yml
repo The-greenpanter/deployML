@@ -1,3 +1,6 @@
-service: ml2
 runtime: python39
-entrypoint: gunicorn -b :$PORT ML2:app
+
+entrypoint: |
+  pip install spacy
+  python -m spacy download en_core_web_sm
+  gunicorn -b :$PORT main:app  # Ajusta `main:app` según tu código
