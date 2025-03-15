@@ -7,6 +7,13 @@ nltk.download("vader_lexicon")
 from nltk.sentiment import SentimentIntensityAnalyzer
 from nltk.sentiment import SentimentIntensityAnalyzer
 import spacy
+import subprocess
+# Descargar el modelo en_core_web_sm si no está instalado
+try:
+    nlp = spacy.load("en_core_web_sm")
+except OSError:
+    subprocess.run(["python", "-m", "spacy", "download", "en_core_web_sm"])
+    nlp = spacy.load("en_core_web_sm")
 import matplotlib.pyplot as plt
 from wordcloud import WordCloud
 import os
