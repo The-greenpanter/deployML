@@ -3,11 +3,14 @@ import pandas as pd
 import folium
 from streamlit_folium import folium_static
 from PIL import Image
+import os
 
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+# Construir la ruta al CSV dentro del proyecto
+ruta_csv = os.path.join(BASE_DIR, "data_example", "sample_reviews_ML1.csv")
 
-# Cargar el dataset limpio
-ruta_csv = r"D:\Soy Henry\Proyecto Final\yelp-google-reviews\Sprint_Nro3\Deployment_final_modelo_ML\data_example\top10_ciudad_ML2.csv"  # Asegúrate de que la ruta sea correcta
-df = pd.read_csv(ruta_csv)
+# Cargar el CSV con pandas
+df = pd.read_csv(ruta_csv, encoding="utf-8", delimiter=",", quotechar='"', header=None, names=["rating", "text"])
 
 # Configurar la interfaz de la aplicación
 st.set_page_config(page_title="Top Restaurantes en California", layout="wide")
@@ -22,8 +25,17 @@ def volver_inicio():
 # Página de inicio (selección de ciudad)
 if st.session_state.pagina_actual == "inicio":
     # Cargar imágenes
-    logo_app = Image.open("D:/Soy Henry/Proyecto Final/yelp-google-reviews/Imagenes/logo.jpg")
-    logo_client = Image.open("D:/Soy Henry/Proyecto Final/yelp-google-reviews/Imagenes/invertur.png")
+
+    # Obtener la ruta absoluta de la carpeta donde está ML1.py
+    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+    # Construir las rutas de las imágenes
+    logo_app_path = os.path.join(BASE_DIR, "Imagenes", "logo.jpg")
+    logo_client_path = os.path.join(BASE_DIR, "Imagenes", "invertur.png")
+
+    # Cargar las imágenes con PIL
+    logo_app = Image.open(logo_app_path)
+    logo_client = Image.open(logo_client_path)
 
     # Usar columnas para alinear el título y los logos en una fila
     col1, col2, col3 = st.columns([1, 6, 1])

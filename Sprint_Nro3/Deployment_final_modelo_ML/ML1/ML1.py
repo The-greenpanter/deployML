@@ -3,6 +3,7 @@ from nltk.sentiment import SentimentIntensityAnalyzer
 import spacy
 import matplotlib.pyplot as plt
 from wordcloud import WordCloud
+import os
 from PIL import Image
 import pandas as pd
 
@@ -10,11 +11,22 @@ import pandas as pd
 st.set_page_config(layout="wide", page_title="Análisis de Reseñas")
 
 # Cargar imágenes
-logo_app = Image.open("D:/Soy Henry/Proyecto Final/yelp-google-reviews/Imagenes/logo.jpg")
-logo_client = Image.open("D:/Soy Henry/Proyecto Final/yelp-google-reviews/Imagenes/invertur.png")
 
-# Cargar el CSV
-ruta_csv=r"D:\Soy Henry\Proyecto Final\yelp-google-reviews\Sprint_Nro3\Deployment_final_modelo_ML\data_example\sample_reviews_ML1.csv"
+# Obtener la ruta absoluta de la carpeta donde está ML1.py
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+# Construir las rutas de las imágenes
+logo_app_path = os.path.join(BASE_DIR, "Imagenes", "logo.jpg")
+logo_client_path = os.path.join(BASE_DIR, "Imagenes", "invertur.png")
+
+# Cargar las imágenes con PIL
+logo_app = Image.open(logo_app_path)
+logo_client = Image.open(logo_client_path)
+
+# Construir la ruta al CSV dentro del proyecto
+ruta_csv = os.path.join(BASE_DIR, "data_example", "sample_reviews_ML1.csv")
+
+# Cargar el CSV con pandas
 df = pd.read_csv(ruta_csv, encoding="utf-8", delimiter=",", quotechar='"', header=None, names=["rating", "text"])
 
 
@@ -41,7 +53,11 @@ with col3:
 
 # Inicializar el analizador de sentimiento y cargar el modelo de spaCy
 sia = SentimentIntensityAnalyzer()
-nlp = spacy.load(r"D:\Soy Henry\Proyecto Final\yelp-google-reviews\Sprint_Nro3\Deployment_final_modelo_ML\adjusted_model")
+# Construir la ruta del modelo dentro del proyecto
+ruta_modelo = os.path.join(BASE_DIR, "adjusted_model")
+
+# Cargar el modelo de spaCy
+nlp = spacy.load(ruta_modelo)
 nlp_fun = spacy.load("en_core_web_sm")
 
 # Función para extraer adjetivos y adverbios con spaCy
