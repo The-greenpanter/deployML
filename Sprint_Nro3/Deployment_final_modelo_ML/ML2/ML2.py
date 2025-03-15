@@ -99,3 +99,6 @@ elif st.session_state.pagina_actual == "resultados":
     if st.button("↩ Volver a la página principal"):
         volver_inicio()
         st.rerun()
+
+if __name__ == "__main__":
+    app.run()
