@@ -1,4 +1,10 @@
 import streamlit as st
+import nltk
+
+# Descargar automáticamente vader_lexicon en Render
+nltk.download("vader_lexicon")
+
+from nltk.sentiment import SentimentIntensityAnalyzer
 from nltk.sentiment import SentimentIntensityAnalyzer
 import spacy
 import matplotlib.pyplot as plt
