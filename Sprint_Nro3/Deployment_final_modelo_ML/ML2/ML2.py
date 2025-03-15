@@ -48,8 +48,7 @@ if st.session_state.pagina_actual == "inicio":
 
 
     # Selección de ciudad
-    ciudades_disponibles = sorted(df["city"].dropna().unique())  # Filtrar valores nulos
-    ciudad_seleccionada = st.selectbox("Selecciona una ciudad:", ciudades_disponibles)
+    ciudad_seleccionada = st.selectbox("Selecciona una ciudad:", sorted(df["city"].unique()))
 
     # Botón de búsqueda
     if st.button("🔍 Buscar restaurantes"):
